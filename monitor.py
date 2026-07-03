@@ -133,29 +133,38 @@ def fetch_page(url, retries=2):
 
 
 def send_sms(body):
-    """Envoie un SMS via l'API REST Twilio (sans SDK)."""
+    """Envoie un SMS via l'API REST Twilio à un ou plusieurs numéros.
+
+    ALERT_TO_NUMBER peut contenir plusieurs numéros séparés par des virgules :
+    +1514XXXXXXX,+1450XXXXXXX
+    """
     sid = os.environ.get("TWILIO_ACCOUNT_SID")
     token = os.environ.get("TWILIO_AUTH_TOKEN")
     from_num = os.environ.get("TWILIO_FROM_NUMBER")
-    to_num = os.environ.get("ALERT_TO_NUMBER")
+    to_raw = os.environ.get("ALERT_TO_NUMBER", "")
 
-    if not all([sid, token, from_num, to_num]):
+    to_numbers = [n.strip() for n in to_raw.split(",") if n.strip()]
+
+    if not all([sid, token, from_num]) or not to_numbers:
         log("⚠️  Secrets Twilio manquants — SMS non envoyé. Message :")
         log(body)
         return False
 
     url = f"https://api.twilio.com/2010-04-01/Accounts/{sid}/Messages.json"
-    resp = requests.post(
-        url,
-        auth=(sid, token),
-        data={"From": from_num, "To": to_num, "Body": body},
-        timeout=30,
-    )
-    if resp.status_code in (200, 201):
-        log("✅ SMS envoyé")
-        return True
-    log(f"❌ Erreur Twilio {resp.status_code} : {resp.text[:200]}")
-    return False
+    sent_any = False
+    for to_num in to_numbers:
+        resp = requests.post(
+            url,
+            auth=(sid, token),
+            data={"From": from_num, "To": to_num, "Body": body},
+            timeout=30,
+        )
+        if resp.status_code in (200, 201):
+            log(f"✅ SMS envoyé à {to_num}")
+            sent_any = True
+        else:
+            log(f"❌ Erreur Twilio pour {to_num} ({resp.status_code}) : {resp.text[:200]}")
+    return sent_any
 
 
 def should_alert(event_state, min_price, now_ts):
