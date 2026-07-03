@@ -1,0 +1,22 @@
+{
+  "events": [
+    {
+      "name": "EXEMPLE - Canadiens vs Bruins (Centre Bell)",
+      "url": "https://www.billet.ca/tickets/exemple-remplace-moi",
+      "site": "billet.ca",
+      "max_price": 150,
+      "enabled": false,
+      "css_selector": null,
+      "_notes": "Mets enabled: true et remplace l'URL par la vraie page de l'événement. max_price = prix PAR BILLET en $. css_selector est optionnel (voir README)."
+    },
+    {
+      "name": "EXEMPLE - Show Ticketmaster",
+      "url": "https://www.ticketmaster.ca/exemple",
+      "site": "ticketmaster",
+      "max_price": 100,
+      "enabled": false,
+      "css_selector": null,
+      "_notes": "Ticketmaster bloque souvent les serveurs. Si ça retourne HTTP 403 dans les logs, voir la section Ticketmaster du README."
+    }
+  ]
+}
