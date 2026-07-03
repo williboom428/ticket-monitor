@@ -1,0 +1,52 @@
+name: Ticket Price Monitor
+
+on:
+  schedule:
+    # Toutes les 30 minutes (heure UTC, mais peu importe pour un */30)
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}  # Permet de lancer manuellement depuis l'onglet Actions
+
+permissions:
+  contents: write  # Nécessaire pour commiter state.json
+
+concurrency:
+  group: ticket-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run monitor
+        env:
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_FROM_NUMBER: ${{ secrets.TWILIO_FROM_NUMBER }}
+          ALERT_TO_NUMBER: ${{ secrets.ALERT_TO_NUMBER }}
+        run: python monitor.py
+
+      - name: Commit state
+        run: |
+          git config user.name "ticket-monitor-bot"
+          git config user.email "actions@github.com"
+          git add state.json || true
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update state [skip ci]"
+            git push
+          else
+            echo "Pas de changement d'état."
+          fi
