@@ -1,22 +1,12 @@
 {
   "events": [
     {
-      "name": "EXEMPLE - Canadiens vs Bruins (Centre Bell)",
-      "url": "https://www.billet.ca/tickets/exemple-remplace-moi",
+      "name": "TEST - Maple Leafs vs Canadiens Présaison ",
+      "url": "https://www.billets.ca/fr/evenements/canadiens-pra-saison-2026-09-19-19h00",
       "site": "billet.ca",
-      "max_price": 150,
-      "enabled": false,
-      "css_selector": null,
-      "_notes": "Mets enabled: true et remplace l'URL par la vraie page de l'événement. max_price = prix PAR BILLET en $. css_selector est optionnel (voir README)."
-    },
-    {
-      "name": "EXEMPLE - Show Ticketmaster",
-      "url": "https://www.ticketmaster.ca/exemple",
-      "site": "ticketmaster",
-      "max_price": 100,
-      "enabled": false,
-      "css_selector": null,
-      "_notes": "Ticketmaster bloque souvent les serveurs. Si ça retourne HTTP 403 dans les logs, voir la section Ticketmaster du README."
+      "max_price": 9999,
+      "enabled": true,
+      "css_selector": null
     }
   ]
 }
