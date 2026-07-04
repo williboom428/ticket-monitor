@@ -3,7 +3,7 @@ name: Ticket Price Monitor
 on:
   schedule:
     # Toutes les 30 minutes (heure UTC, mais peu importe pour un */30)
-    - cron: "*/30 * * * *"
+    - cron: "*/30,41 * * * *"
   workflow_dispatch: {}  # Permet de lancer manuellement depuis l'onglet Actions
 
 permissions:
