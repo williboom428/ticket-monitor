@@ -224,11 +224,11 @@ def main():
 
         if min_price <= max_price:
             if should_alert(event_state, min_price, now_ts):
+                # Message court : les comptes Twilio en mode essai ont une
+                # limite de longueur (erreur 30044). Pas d'emoji ni d'URL.
                 body = (
-                    f"🎟️ ALERTE BILLETS\n"
-                    f"{name}\n"
-                    f"Prix trouvé : {min_price:.2f} $ (seuil : {max_price} $)\n"
-                    f"{url}"
+                    f"ALERTE BILLETS: {name[:40]} - "
+                    f"{min_price:.2f}$ (seuil {max_price}$)"
                 )
                 if send_sms(body):
                     alerts_sent += 1
