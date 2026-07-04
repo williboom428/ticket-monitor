@@ -2,8 +2,9 @@ name: Ticket Price Monitor
 
 on:
   schedule:
-    # Toutes les 30 minutes (heure UTC, mais peu importe pour un */30)
-    - cron: "*/30,41 * * * *"
+    # Aux 30 minutes (à :07 et :37), sur des minutes décalées
+    # pour éviter la congestion GitHub des heures rondes
+    - cron: "7,37 * * * *"
   workflow_dispatch: {}  # Permet de lancer manuellement depuis l'onglet Actions
 
 permissions:
@@ -29,7 +30,7 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install requests beautifulsoup4
+        run: pip install -r requirements.txt
 
       - name: Run monitor
         env:
