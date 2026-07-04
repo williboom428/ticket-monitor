@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """
-Ticket Price Monitor
-Surveille les prix de billets (billet.ca, Ticketmaster, etc.)
-et envoie un SMS via Twilio quand un prix passe sous le seuil configuré.
+Ticket Price Monitor v2
+Surveille les prix de billets et envoie un SMS via Twilio quand un prix
+passe sous le seuil configuré.
+
+- billets.ca : utilise l'API interne du site (vrais prix + quantités réelles).
+  L'event_id est détecté automatiquement à partir de l'URL de la page.
+- Autres sites : extraction générique des prix dans le HTML.
 """
 
 import json
@@ -34,11 +38,15 @@ HEADERS = {
     "Upgrade-Insecure-Requests": "1",
 }
 
+BILLETS_CA_API = "https://www.billets.ca/views/epic_seatmap/get_event_tickets.php?event_id={event_id}"
+
 # Regex générique pour trouver des prix : 123 $, $123, 123,50 $, $1,234.56, etc.
 PRICE_PATTERN = re.compile(
     r"(?:\$\s*(\d{1,4}(?:[ ,]\d{3})*(?:[.,]\d{2})?))"      # $123.45
     r"|(?:(\d{1,4}(?:[ ,]\d{3})*(?:[.,]\d{2})?)\s*\$)"     # 123,45 $
 )
+
+EVENT_ID_PATTERN = re.compile(r"event_id=(\d+)")
 
 
 def log(msg):
@@ -61,7 +69,7 @@ def save_json(path, data):
 
 def parse_price(raw):
     """Convertit une string de prix ('1 234,56' ou '1,234.56') en float."""
-    raw = raw.strip()
+    raw = str(raw).strip()
     raw = raw.replace(" ", "").replace("\u00a0", "")
     if "," in raw and "." in raw:
         raw = raw.replace(",", "")
@@ -76,6 +84,121 @@ def parse_price(raw):
     except ValueError:
         return None
 
+
+def fetch_page(url, referer=None, retries=2):
+    """Récupère une page/API avec retries."""
+    headers = dict(HEADERS)
+    if referer:
+        headers["Referer"] = referer
+        headers["X-Requested-With"] = "XMLHttpRequest"
+    last_err = None
+    for attempt in range(retries + 1):
+        try:
+            resp = requests.get(url, headers=headers, timeout=30)
+            if resp.status_code == 200:
+                return resp.text
+            last_err = f"HTTP {resp.status_code}"
+            if resp.status_code in (403, 429):
+                break
+        except requests.RequestException as e:
+            last_err = str(e)
+        if attempt < retries:
+            time.sleep(5)
+    raise RuntimeError(f"Échec du fetch : {last_err}")
+
+
+# ---------------------------------------------------------------------------
+# Mode billets.ca (API interne)
+# ---------------------------------------------------------------------------
+
+def collect_ticket_listings(node, out):
+    """Parcourt récursivement le JSON de l'API billets.ca et ramasse tous les
+    listings (dicts contenant sale_price + nb_tickets), peu importe la
+    profondeur ou la structure exacte."""
+    if isinstance(node, dict):
+        if "sale_price" in node and "nb_tickets" in node:
+            out.append(node)
+        else:
+            for value in node.values():
+                collect_ticket_listings(value, out)
+    elif isinstance(node, list):
+        for item in node:
+            collect_ticket_listings(item, out)
+
+
+def listing_fits_quantity(listing, min_quantity):
+    """Vérifie qu'un listing permet d'acheter au moins min_quantity billets
+    ensemble. Le champ 'blocks' indique les regroupements vendables
+    (ex. '2,4' = achetable en blocs de 2 ou de 4)."""
+    try:
+        nb = int(str(listing.get("nb_tickets", "0")))
+    except ValueError:
+        nb = 0
+    if nb < min_quantity:
+        return False
+    blocks_raw = str(listing.get("blocks") or "").strip()
+    if not blocks_raw:
+        return True  # pas d'info de blocs → on se fie à nb_tickets
+    blocks = []
+    for b in blocks_raw.split(","):
+        try:
+            blocks.append(int(b.strip()))
+        except ValueError:
+            continue
+    if not blocks:
+        return True
+    # OK si un bloc permet d'acheter au moins la quantité voulue
+    return any(b >= min_quantity for b in blocks)
+
+
+def check_billets_ca(event, event_url):
+    """Retourne (min_price, quantity_dispo, nb_listings) pour un événement
+    billets.ca, en passant par l'API interne du site."""
+    min_quantity = int(event.get("min_quantity", 1))
+
+    # 1. Trouver l'event_id dans le HTML de la page
+    html = fetch_page(event_url)
+    match = EVENT_ID_PATTERN.search(html)
+    if not match:
+        raise RuntimeError("event_id introuvable dans la page")
+    event_id = match.group(1)
+
+    # 2. Appeler l'API des billets
+    api_url = BILLETS_CA_API.format(event_id=event_id)
+    raw = fetch_page(api_url, referer=event_url)
+    if not raw.strip():
+        return None, None, 0  # aucun billet en vente
+
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        raise RuntimeError("réponse API illisible (pas du JSON)")
+
+    listings = []
+    collect_ticket_listings(data, listings)
+
+    eligible = []
+    for listing in listings:
+        if not listing_fits_quantity(listing, min_quantity):
+            continue
+        price = parse_price(listing.get("sale_price"))
+        if price is not None and price > 0:
+            try:
+                nb = int(str(listing.get("nb_tickets", "0")))
+            except ValueError:
+                nb = 0
+            eligible.append((price, nb))
+
+    if not eligible:
+        return None, None, len(listings)
+
+    best_price, best_nb = min(eligible, key=lambda x: x[0])
+    return best_price, best_nb, len(listings)
+
+
+# ---------------------------------------------------------------------------
+# Mode générique (autres sites)
+# ---------------------------------------------------------------------------
 
 def extract_prices_generic(html):
     """Extrait tous les montants en $ visibles dans la page."""
@@ -106,23 +229,22 @@ def extract_prices_selector(html, selector):
     return prices
 
 
-def fetch_page(url, retries=2):
-    """Récupère la page avec retries."""
-    last_err = None
-    for attempt in range(retries + 1):
-        try:
-            resp = requests.get(url, headers=HEADERS, timeout=30)
-            if resp.status_code == 200:
-                return resp.text
-            last_err = f"HTTP {resp.status_code}"
-            if resp.status_code in (403, 429):
-                break
-        except requests.RequestException as e:
-            last_err = str(e)
-        if attempt < retries:
-            time.sleep(5)
-    raise RuntimeError(f"Échec du fetch : {last_err}")
+def check_generic(event, event_url):
+    """Retourne (min_price, None, nb_prix) via scraping HTML générique."""
+    html = fetch_page(event_url)
+    selector = event.get("css_selector")
+    if selector:
+        prices = extract_prices_selector(html, selector)
+    else:
+        prices = extract_prices_generic(html)
+    if not prices:
+        return None, None, 0
+    return min(prices), None, len(prices)
 
+
+# ---------------------------------------------------------------------------
+# Alertes
+# ---------------------------------------------------------------------------
 
 def send_sms(body):
     """Envoie un SMS via l'API REST Twilio à un ou plusieurs numéros.
@@ -172,6 +294,10 @@ def should_alert(event_state, min_price, now_ts):
     return cooldown_expired
 
 
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
 def main():
     config = load_json(CONFIG_FILE, {"events": []})
     state = load_json(STATE_FILE, {})
@@ -188,47 +314,50 @@ def main():
         name = event.get("name", "Sans nom")
         url = event.get("url")
         max_price = event.get("max_price")
-        selector = event.get("css_selector")
+        min_quantity = int(event.get("min_quantity", 1))
 
         if not url or max_price is None:
             log(f"⏭️  '{name}' : url ou max_price manquant, ignoré")
             continue
 
-        log(f"🔍 Vérification : {name} (seuil : {max_price} $)")
+        log(f"🔍 Vérification : {name} (seuil : {max_price} $, min {min_quantity} billet(s))")
         event_state = state.setdefault(name, {})
+        event_state["last_check_ts"] = now_ts
+
+        is_billets_ca = "billets.ca" in url or "billet.ca" in url
 
         try:
-            html = fetch_page(url)
+            if is_billets_ca:
+                min_price, qty, nb_listings = check_billets_ca(event, url)
+            else:
+                min_price, qty, nb_listings = check_generic(event, url)
         except RuntimeError as e:
             log(f"❌ {name} : {e}")
             event_state["last_error"] = str(e)
-            event_state["last_check_ts"] = now_ts
             continue
 
-        if selector:
-            prices = extract_prices_selector(html, selector)
-        else:
-            prices = extract_prices_generic(html)
-
-        event_state["last_check_ts"] = now_ts
         event_state.pop("last_error", None)
+        event_state["last_min_price"] = min_price
 
-        if not prices:
-            log(f"⚠️  {name} : aucun prix détecté sur la page")
-            event_state["last_min_price"] = None
+        if min_price is None:
+            if nb_listings > 0:
+                log(f"⚠️  {name} : {nb_listings} listing(s) trouvés mais aucun "
+                    f"n'offre {min_quantity} billet(s) ensemble")
+            else:
+                log(f"⚠️  {name} : aucun billet en vente pour l'instant")
             continue
 
-        min_price = min(prices)
-        event_state["last_min_price"] = min_price
-        log(f"   Prix min trouvé : {min_price:.2f} $ ({len(prices)} prix détectés)")
+        qty_txt = f" (lot de {qty})" if qty else ""
+        log(f"   Prix min : {min_price:.2f} ${qty_txt} — {nb_listings} listing(s) analysés")
 
         if min_price <= max_price:
             if should_alert(event_state, min_price, now_ts):
                 # Message court : les comptes Twilio en mode essai ont une
                 # limite de longueur (erreur 30044). Pas d'emoji ni d'URL.
+                qty_sms = f" x{qty}" if qty else ""
                 body = (
                     f"ALERTE BILLETS: {name[:40]} - "
-                    f"{min_price:.2f}$ (seuil {max_price}$)"
+                    f"{min_price:.2f}${qty_sms} (seuil {max_price}$)"
                 )
                 if send_sms(body):
                     alerts_sent += 1
