@@ -1,16 +1,16 @@
 {
   "events": [
     {
-      "name": "Canadiens vs Maple Leafs Presaison 19 sept",
+      "name": "CH Presaison vs Maple Leafs 19 sept",
       "url": "https://www.billets.ca/fr/evenements/canadiens-pra-saison-2026-09-19-19h00",
       "site": "billets.ca",
-      "max_price": 50,
+      "max_price": 60,
       "min_quantity": 2,
       "enabled": true,
       "css_selector": null
     },
     {
-      "name": "Ottawa vs Montréal Présaison",
+      "name": "CH Presaison vs Senateurs 26 sept",
       "url": "https://www.billets.ca/fr/evenements/canadiens-pra-saison-2026-09-23-19h00",
       "site": "billets.ca",
       "max_price": 50,
@@ -19,11 +19,317 @@
       "css_selector": null
     },
     {
+      "name": "CH Heritage Classic vs Jets 25 oct",
+      "url": "https://www.billets.ca/fr/evenements/canadiens-de-montreal-vs-jets-de-winnipeg-2026-10-25-18h00",
+      "site": "billets.ca",
+      "max_price": 100,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Alouettes vs Calgary 11 juil",
+      "url": "https://www.billets.ca/fr/evenements/stampeders-de-calgary-vs-alouettes-de-montreal-2026-07-11-19h00",
+      "site": "billets.ca",
+      "max_price": 20,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Alouettes vs Hamilton 26 juil",
+      "url": "https://www.billets.ca/fr/evenements/tiger-cats-de-hamilton-vs-alouettes-de-montreal-2026-07-26-19h00",
+      "site": "billets.ca",
+      "max_price": 20,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Alouettes vs Edmonton 8 aout",
+      "url": "https://www.billets.ca/fr/evenements/elks-d-edmonton-vs-alouettes-de-montreal-2026-08-08-15h00",
+      "site": "billets.ca",
+      "max_price": 20,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Alouettes vs Ottawa 20 aout",
+      "url": "https://www.billets.ca/fr/evenements/rouge-et-noir-d-ottawa-vs-alouettes-de-montreal-2026-08-20-19h30",
+      "site": "billets.ca",
+      "max_price": 20,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "CF vs Vancouver FC 12 juil",
+      "url": "https://www.billets.ca/fr/evenements/vancouver-fc-vs-cf-montreal-2026-07-12-19h30",
+      "site": "billets.ca",
+      "max_price": 20,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "CF vs Toronto FC 16 juil",
+      "url": "https://www.billets.ca/fr/evenements/toronto-fc-vs-cf-montreal-2026-07-16-19h30",
+      "site": "billets.ca",
+      "max_price": 25,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "CF vs Inter Miami 25 juil",
+      "url": "https://www.billets.ca/fr/evenements/inter-miami-fc-vs-cf-montreal-2026-07-25-19h30",
+      "site": "billets.ca",
+      "max_price": 160,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "CF vs New England 1 aout",
+      "url": "https://www.billets.ca/fr/evenements/revolution-de-la-nouvelle-angleterre-vs-cf-montreal-2026-08-01-19h30",
+      "site": "billets.ca",
+      "max_price": 15,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "CF vs DC United 15 aout",
+      "url": "https://www.billets.ca/fr/evenements/dc-united-vs-cf-montreal-2026-08-15-19h30",
+      "site": "billets.ca",
+      "max_price": 15,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "CF vs LA Galaxy 22 aout",
+      "url": "https://www.billets.ca/fr/evenements/galaxy-de-los-angeles-vs-cf-montreal-2026-08-22-19h30",
+      "site": "billets.ca",
+      "max_price": 15,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "CF vs Charlotte 9 sept",
+      "url": "https://www.billets.ca/fr/evenements/charlotte-fc-vs-cf-montreal-2026-09-09-19h30",
+      "site": "billets.ca",
+      "max_price": 10,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "CF vs Columbus 19 sept",
+      "url": "https://www.billets.ca/fr/evenements/crew-sc-de-columbus-vs-cf-montreal-2026-09-19-19h30",
+      "site": "billets.ca",
+      "max_price": 15,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "CF vs Cincinnati 26 sept",
+      "url": "https://www.billets.ca/fr/evenements/cincinnati-fc-vs-cf-montreal-2026-09-26-19h30",
+      "site": "billets.ca",
+      "max_price": 10,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "CF vs Atlanta 14 oct",
+      "url": "https://www.billets.ca/fr/evenements/atlanta-united-fc-vs-cf-montreal-2026-10-14-19h30",
+      "site": "billets.ca",
+      "max_price": 10,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "CF vs Nashville 24 oct",
+      "url": "https://www.billets.ca/fr/evenements/nashville-sc-vs-cf-montreal-2026-10-24-16h00",
+      "site": "billets.ca",
+      "max_price": 10,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "CF vs Whitecaps 7 nov",
+      "url": "https://www.billets.ca/fr/evenements/whitecaps-de-vancouver-fc-vs-cf-montreal-2026-11-07-16h00",
+      "site": "billets.ca",
+      "max_price": 15,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "OBN Quarts Seance 18 - 10 aout",
+      "url": "https://www.billets.ca/fr/evenements/omnium-banque-nationale-montreal-stade-iga-2026-08-10-16h00",
+      "site": "billets.ca",
+      "max_price": 78,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "OBN Quarts Seance 19 - 11 aout",
+      "url": "https://www.billets.ca/fr/evenements/omnium-banque-nationale-montreal-stade-iga-2026-08-11-16h00",
+      "site": "billets.ca",
+      "max_price": 78,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "OBN Demi-finales - 12 aout",
+      "url": "https://www.billets.ca/fr/evenements/omnium-banque-nationale-montreal-stade-iga-2026-08-12-18h00",
+      "site": "billets.ca",
+      "max_price": 140,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
       "name": "Finale Banque Nationale",
       "url": "https://www.billets.ca/fr/evenements/omnium-banque-nationale-montreal-stade-iga-2026-08-13-18h00",
       "site": "billets.ca",
-      "max_price": 200,
-      "min_quantity": 1,
+      "max_price": 280,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Alex Warren 8 juil",
+      "url": "https://www.billets.ca/fr/evenements/alex-warren-montreal-centre-bell-2026-07-08-19h30",
+      "site": "billets.ca",
+      "max_price": 30,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Ariana Grande 28 juil",
+      "url": "https://www.billets.ca/fr/evenements/ariana-grande-montreal-centre-bell-2026-07-28-19h30",
+      "site": "billets.ca",
+      "max_price": 500,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Ariana Grande 30 juil",
+      "url": "https://www.billets.ca/fr/evenements/ariana-grande-montreal-centre-bell-2026-07-30-19h30",
+      "site": "billets.ca",
+      "max_price": 500,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Ariana Grande 31 juil",
+      "url": "https://www.billets.ca/fr/evenements/ariana-grande-montreal-centre-bell-2026-07-31-20h00",
+      "site": "billets.ca",
+      "max_price": 500,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "ACDC Parc Jean-Drapeau 12 sept",
+      "url": "https://www.billets.ca/fr/evenements/acdc-montreal-parc-jean-drapeau-2026-09-12-19h00",
+      "site": "billets.ca",
+      "max_price": 160,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Olivia Rodrigo 21 oct",
+      "url": "https://www.billets.ca/fr/evenements/olivia-rodrigo-montreal-centre-bell-2026-10-21-19h00",
+      "site": "billets.ca",
+      "max_price": 300,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Olivia Rodrigo 22 oct",
+      "url": "https://www.billets.ca/fr/evenements/olivia-rodrigo-montreal-centre-bell-2026-10-22-19h00",
+      "site": "billets.ca",
+      "max_price": 300,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Aya Nakamura 24 oct",
+      "url": "https://www.billets.ca/fr/evenements/aya-nakamura-montreal-centre-bell-2026-10-24-20h00",
+      "site": "billets.ca",
+      "max_price": 150,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Aya Nakamura 25 oct",
+      "url": "https://www.billets.ca/fr/evenements/aya-nakamura-montreal-centre-bell-2026-10-25-20h00",
+      "site": "billets.ca",
+      "max_price": 100,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Don Omar 21 fev 2027",
+      "url": "https://www.billets.ca/fr/evenements/don-omar-montreal-centre-bell-2027-02-21-20h00",
+      "site": "billets.ca",
+      "max_price": 80,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Bigflo et Oli Place Bell 20 janv 2027",
+      "url": "https://www.billets.ca/fr/evenements/bigflo-oli-laval-place-bell-2027-01-20-19h30",
+      "site": "billets.ca",
+      "max_price": 70,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "J Cole 25 juil",
+      "url": "https://www.billets.ca/fr/evenements/j-cole-montreal-centre-bell-2026-07-25-20h00",
+      "site": "billets.ca",
+      "max_price": 50,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Daniel Caesar 6 aout",
+      "url": "https://www.billets.ca/fr/evenements/daniel-caesar-montreal-centre-bell-2026-08-06-19h30",
+      "site": "billets.ca",
+      "max_price": 100,
+      "min_quantity": 2,
+      "enabled": true,
+      "css_selector": null
+    },
+    {
+      "name": "Avenged Sevenfold 8 aout",
+      "url": "https://www.billets.ca/fr/evenements/avenged-sevenfold-montreal-centre-bell-2026-08-08-18h00",
+      "site": "billets.ca",
+      "max_price": 80,
+      "min_quantity": 2,
       "enabled": true,
       "css_selector": null
     }
